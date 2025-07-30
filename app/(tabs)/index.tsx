@@ -13,6 +13,8 @@ import {
 
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function HomeScreen() {
   const [leftLanguage, setLeftLanguage] = useState("en");
@@ -251,6 +253,9 @@ export default function HomeScreen() {
 
   return (
     <ThemedView style={styles.container}>
+      <View style={styles.header}>
+        <ThemeToggle />
+      </View>
       <View style={styles.translatorContainer}>
         <View style={styles.side}>
           <ThemedText>Language 1</ThemedText>
@@ -259,7 +264,7 @@ export default function HomeScreen() {
             onValueChange={itemValue => setLeftLanguage(itemValue)}
             enabled={!isRecording}
             style={styles.picker}
-            itemStyle={{ color: "white" }}
+            itemStyle={{ color: useThemeColor({}, 'text') }}
           >
             <Picker.Item label="English" value="en" />
             <Picker.Item label="Russian" value="ru" />
@@ -268,6 +273,10 @@ export default function HomeScreen() {
           <Pressable
             style={({ pressed }) => [
               styles.button,
+              {
+                backgroundColor: useThemeColor({}, 'primary'),
+                borderColor: useThemeColor({}, 'border'),
+              },
               ((isRecording && isRecording !== "left") || isLoading) &&
                 styles.buttonDisabled,
               pressed && styles.buttonPressed
@@ -275,7 +284,7 @@ export default function HomeScreen() {
             onPress={() => handleRecord("left")}
             disabled={(isRecording && isRecording !== "left") || isLoading}
           >
-            <ThemedText style={styles.buttonText}>
+            <ThemedText style={[styles.buttonText, { color: useThemeColor({}, 'background') }]}>
               {isRecording === "left" ? "Stop" : "Record"}
             </ThemedText>
           </Pressable>
@@ -287,7 +296,7 @@ export default function HomeScreen() {
             onValueChange={itemValue => setRightLanguage(itemValue)}
             enabled={!isRecording}
             style={styles.picker}
-            itemStyle={{ color: "white" }}
+            itemStyle={{ color: useThemeColor({}, 'text') }}
           >
             <Picker.Item label="English" value="en" />
             <Picker.Item label="Russian" value="ru" />
@@ -296,6 +305,10 @@ export default function HomeScreen() {
           <Pressable
             style={({ pressed }) => [
               styles.button,
+              {
+                backgroundColor: useThemeColor({}, 'primary'),
+                borderColor: useThemeColor({}, 'border'),
+              },
               ((isRecording && isRecording !== "right") || isLoading) &&
                 styles.buttonDisabled,
               pressed && styles.buttonPressed
@@ -303,13 +316,13 @@ export default function HomeScreen() {
             onPress={() => handleRecord("right")}
             disabled={(isRecording && isRecording !== "right") || isLoading}
           >
-            <ThemedText style={styles.buttonText}>
+            <ThemedText style={[styles.buttonText, { color: useThemeColor({}, 'background') }]}>
               {isRecording === "right" ? "Stop" : "Record"}
             </ThemedText>
           </Pressable>
         </View>
       </View>
-      {isLoading && <ActivityIndicator size="large" color="#0000ff" />}
+      {isLoading && <ActivityIndicator size="large" color={useThemeColor({}, 'primary')} />}
     </ThemedView>
   );
 }
@@ -319,6 +332,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  header: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 1,
   },
   translatorContainer: {
     flexDirection: "row",
@@ -336,22 +355,18 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
-    backgroundColor: "#2c2c2e",
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#444"
   },
   buttonPressed: {
-    backgroundColor: "#444"
+    opacity: 0.7,
   },
   buttonDisabled: {
-    backgroundColor: "#1c1c1e",
-    borderColor: "#333"
+    opacity: 0.5,
   },
   buttonText: {
-    color: "white",
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center"
