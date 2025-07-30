@@ -2,6 +2,18 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Features
+
+### Theme Support
+This app includes comprehensive dark and light theme support:
+
+- **Automatic System Theme Detection**: The app automatically detects and follows your device's system theme
+- **Manual Theme Override**: You can manually switch between light, dark, and system themes using the theme toggle button
+- **Persistent Theme Preferences**: Your theme choice is saved and restored when you reopen the app
+- **Comprehensive Theming**: All UI components automatically adapt to the selected theme
+
+The theme toggle button is located in the top-right corner of both the Home and Explore screens.
+
 ## Get started
 
 1. Install dependencies

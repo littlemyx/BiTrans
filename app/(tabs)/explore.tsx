@@ -6,6 +6,7 @@ import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function TabTwoScreen() {
@@ -20,6 +21,9 @@ export default function TabTwoScreen() {
           style={styles.headerImage}
         />
       }>
+      <ThemedView style={styles.header}>
+        <ThemeToggle />
+      </ThemedView>
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Explore</ThemedText>
       </ThemedView>
@@ -97,6 +101,12 @@ export default function TabTwoScreen() {
 }
 
 const styles = StyleSheet.create({
+  header: {
+    position: 'absolute',
+    top: 50,
+    right: 20,
+    zIndex: 1,
+  },
   headerImage: {
     color: '#808080',
     bottom: -90,
