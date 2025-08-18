@@ -1,6 +1,6 @@
+import { loadThemeMode, saveThemeMode } from '@/utils/themeStorage';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
-import { loadThemeMode, saveThemeMode } from '@/utils/themeStorage';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -51,12 +51,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     isSystemTheme: themeMode === 'system',
   };
 
-  // Don't render until we've loaded the saved theme
-  if (!isLoaded) {
-    return null;
-  }
-
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      {isLoaded ? children : null}
+    </ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {

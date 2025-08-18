@@ -17,6 +17,11 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export default function HomeScreen() {
+  const primaryColor = useThemeColor({}, 'primary');
+  const borderColor = useThemeColor({}, 'border');
+  const backgroundColor = useThemeColor({}, 'background');
+  const textColor = useThemeColor({}, 'text');
+
   const [leftLanguage, setLeftLanguage] = useState("en");
   const [rightLanguage, setRightLanguage] = useState("ru");
   const [isRecording, setIsRecording] = useState<"left" | "right" | null>(null);
@@ -26,76 +31,100 @@ export default function HomeScreen() {
 
   useEffect(() => {
     requestPermission();
+    
+    return () => {
+      cleanupRecording();
+    };
   }, [requestPermission]);
+
+  const cleanupRecording = async () => {
+    try {
+      if (recording) {
+        await recording.stopAndUnloadAsync();
+        setRecording(null);
+      }
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+        playsInSilentModeIOS: false
+      });
+    } catch (error) {
+      console.error("Error cleaning up recording:", error);
+    }
+  };
 
   async function startRecording() {
     try {
+      await cleanupRecording();
+      
       if (permissionResponse && permissionResponse.status !== "granted") {
-        console.log("Requesting permission..");
         await requestPermission();
       }
+      
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true
       });
 
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync({
+      const { recording: newRecording } = await Audio.Recording.createAsync({
         isMeteringEnabled: true,
         android: {
-          extension: ".m4a", // Note: WAV recording is not well-supported on Android.
+          extension: ".m4a",
           outputFormat: Audio.AndroidOutputFormat.MPEG_4,
           audioEncoder: Audio.AndroidAudioEncoder.AAC,
-          sampleRate: 44100,
+          sampleRate: 16000,
           numberOfChannels: 1,
-          bitRate: 128000
+          bitRate: 64000
         },
         ios: {
           extension: ".wav",
-          audioQuality: Audio.IOSAudioQuality.MAX,
-          sampleRate: 44100,
+          audioQuality: Audio.IOSAudioQuality.MEDIUM,
+          sampleRate: 16000,
           numberOfChannels: 1,
-          bitRate: 128000,
+          bitRate: 64000,
           linearPCMBitDepth: 16,
           linearPCMIsBigEndian: false,
           linearPCMIsFloat: false
         },
         web: {}
       });
-      setRecording(recording);
-      console.log("Recording started");
+      setRecording(newRecording);
     } catch (err) {
       console.error("Failed to start recording", err);
+      setIsRecording(null);
+      Alert.alert("Recording Error", "Failed to start recording");
     }
   }
 
   async function stopRecording() {
-    console.log("Stopping recording..");
-    if (!recording) {
-      return;
+    if (!recording) return;
+    
+    try {
+      await recording.stopAndUnloadAsync();
+      const uri = recording.getURI();
+      setRecording(null);
+      
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false
+      });
+      
+      if (uri) {
+        await translateAudio(uri);
+      }
+    } catch (error) {
+      console.error("Error stopping recording:", error);
+      setRecording(null);
+      setIsRecording(null);
+      Alert.alert("Error", "Failed to stop recording");
     }
-    setRecording(null);
-    await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false
-    });
-    const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
-    if (uri) {
-      await translateAudio(uri);
-    }
-    setIsLoading(false);
   }
 
   async function translateAudio(uri: string) {
-    console.log("Translating audio...");
     setIsLoading(true);
-    const apiKey = "OPENAI_API_KEY"; // IMPORTANT: Replace with your API key
+    const apiKey = "ADD OPENAI-TOKEN-HERE";
     const toLanguage = isRecording === "left" ? rightLanguage : leftLanguage;
     const fromLanguage = isRecording === "left" ? leftLanguage : rightLanguage;
 
     try {
-      // Step 1: Transcribe audio to text using Whisper
       const transcriptionFormData = new FormData();
       transcriptionFormData.append("file", {
         uri: uri,
@@ -118,14 +147,10 @@ export default function HomeScreen() {
 
       const transcriptionJson = await transcriptionResponse.json();
       if (transcriptionJson.error) {
-        throw new Error(
-          `Transcription failed: ${transcriptionJson.error.message}`
-        );
+        throw new Error(`Transcription failed: ${transcriptionJson.error.message}`);
       }
       const transcribedText = transcriptionJson.text;
-      console.log("Transcribed text:", transcribedText);
 
-      // Step 2: Translate text using Chat Completions
       const translationResponse = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -135,11 +160,11 @@ export default function HomeScreen() {
             Authorization: `Bearer ${apiKey}`
           },
           body: JSON.stringify({
-            model: "gpt-4o",
+            model: "gpt-3.5-turbo",
             messages: [
               {
                 role: "system",
-                content: `You are a translator. Translate the following text from ${fromLanguage} to ${toLanguage}.`
+                content: `Translate ${fromLanguage} to ${toLanguage}:`
               },
               { role: "user", content: transcribedText }
             ]
@@ -152,10 +177,7 @@ export default function HomeScreen() {
         throw new Error(`Translation failed: ${translationJson.error.message}`);
       }
       const translatedText = translationJson.choices[0].message.content;
-      console.log("Translated text:", translatedText);
 
-      // Step 3: Synthesize the translated text into speech
-      console.log("Requesting TTS from OpenAI...");
       const ttsResponse = await fetch(
         "https://api.openai.com/v1/audio/speech",
         {
@@ -173,79 +195,52 @@ export default function HomeScreen() {
         }
       );
 
-      console.log("TTS response status:", ttsResponse.status);
-
       if (!ttsResponse.ok) {
-        const errorText = await ttsResponse.text();
-        throw new Error(`TTS request failed: ${errorText}`);
+        throw new Error(`TTS request failed`);
       }
 
-      console.log("Processing TTS response...");
       const audioBlob = await ttsResponse.blob();
-      console.log("Audio blob created, size:", audioBlob.size);
-
       const reader = new FileReader();
       reader.readAsDataURL(audioBlob);
       reader.onloadend = async () => {
-        console.log("FileReader finished reading blob.");
         const base64data = (reader.result as string).split(",")[1];
-
-        if (!base64data || base64data.length === 0) {
-          throw new Error("Failed to read base64 data from blob.");
-        }
-
         const audioUri = FileSystem.cacheDirectory + "translated.mp3";
-        console.log(`Writing audio to: ${audioUri}`);
 
         await FileSystem.writeAsStringAsync(audioUri, base64data, {
           encoding: FileSystem.EncodingType.Base64
         });
 
-        console.log("Audio file written successfully.");
         const sideToPlay = isRecording === "left" ? "right" : "left";
-        console.log(`Orchestrating playback in ${sideToPlay} ear...`);
 
         try {
-          // Step 1: Explicitly set audio mode for PLAYBACK
           await Audio.setAudioModeAsync({
             allowsRecordingIOS: false,
             playsInSilentModeIOS: true
           });
-          console.log("Audio mode set for playback.");
 
-          // Step 2: Call the native module and WAIT for it to finish
           await NativeModules.AudioPanning.playFile(audioUri, sideToPlay);
-          console.log("Native module has finished playing.");
         } catch (e) {
-          console.error("Error during playback orchestration:", e);
           Alert.alert("Playback Error", "Could not play the translated audio.");
         } finally {
-          // Step 3: GUARANTEED reset of audio mode for RECORDING
-          console.log("Resetting audio mode for recording...");
-          await Audio.setAudioModeAsync({
-            allowsRecordingIOS: true,
-            playsInSilentModeIOS: true // Keep consistent with recording setup
-          });
-          console.log("Audio mode has been reset for recording.");
           setIsLoading(false);
+          setIsRecording(null);
         }
       };
+
     } catch (error) {
-      let errorMessage = "An unexpected error occurred.";
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      }
-      console.error("Error in translation process:", error);
-      Alert.alert("Error", errorMessage);
+      Alert.alert("Error", error instanceof Error ? error.message : "Translation failed");
       setIsLoading(false);
+      setIsRecording(null);
     }
   }
 
   const handleRecord = async (side: "left" | "right") => {
-    if (isRecording) {
-      setIsRecording(null);
+    if (isRecording === side) {
       await stopRecording();
     } else {
+      if (isRecording) {
+        await cleanupRecording();
+      }
       setIsRecording(side);
       await startRecording();
     }
@@ -256,73 +251,87 @@ export default function HomeScreen() {
       <View style={styles.header}>
         <ThemeToggle />
       </View>
+      
       <View style={styles.translatorContainer}>
         <View style={styles.side}>
-          <ThemedText>Language 1</ThemedText>
+          <ThemedText style={styles.languageLabel}>Language 1</ThemedText>
           <Picker
             selectedValue={leftLanguage}
             onValueChange={itemValue => setLeftLanguage(itemValue)}
-            enabled={!isRecording}
+            enabled={!isRecording && !isLoading}
             style={styles.picker}
-            itemStyle={{ color: useThemeColor({}, 'text') }}
+            itemStyle={{ color: textColor }}
           >
             <Picker.Item label="English" value="en" />
             <Picker.Item label="Russian" value="ru" />
             <Picker.Item label="German" value="de" />
           </Picker>
+          
           <Pressable
             style={({ pressed }) => [
               styles.button,
               {
-                backgroundColor: useThemeColor({}, 'primary'),
-                borderColor: useThemeColor({}, 'border'),
+                backgroundColor: primaryColor,
+                borderColor: borderColor,
               },
-              ((isRecording && isRecording !== "left") || isLoading) &&
-                styles.buttonDisabled,
+              isRecording === "left" && styles.buttonRecording,
+              ((isRecording && isRecording !== "left") || isLoading) && styles.buttonDisabled,
               pressed && styles.buttonPressed
             ]}
             onPress={() => handleRecord("left")}
             disabled={(isRecording && isRecording !== "left") || isLoading}
           >
-            <ThemedText style={[styles.buttonText, { color: useThemeColor({}, 'background') }]}>
+            <ThemedText style={[styles.buttonText, { color: backgroundColor }]}>
               {isRecording === "left" ? "Stop" : "Record"}
             </ThemedText>
           </Pressable>
         </View>
+
+        <View style={styles.separator}>
+          <ThemedText style={styles.separatorText}>⇄</ThemedText>
+        </View>
+
         <View style={styles.side}>
-          <ThemedText>Language 2</ThemedText>
+          <ThemedText style={styles.languageLabel}>Language 2</ThemedText>
           <Picker
             selectedValue={rightLanguage}
             onValueChange={itemValue => setRightLanguage(itemValue)}
-            enabled={!isRecording}
+            enabled={!isRecording && !isLoading}
             style={styles.picker}
-            itemStyle={{ color: useThemeColor({}, 'text') }}
+            itemStyle={{ color: textColor }}
           >
             <Picker.Item label="English" value="en" />
             <Picker.Item label="Russian" value="ru" />
             <Picker.Item label="German" value="de" />
           </Picker>
+          
           <Pressable
             style={({ pressed }) => [
               styles.button,
               {
-                backgroundColor: useThemeColor({}, 'primary'),
-                borderColor: useThemeColor({}, 'border'),
+                backgroundColor: primaryColor,
+                borderColor: borderColor,
               },
-              ((isRecording && isRecording !== "right") || isLoading) &&
-                styles.buttonDisabled,
+              isRecording === "right" && styles.buttonRecording,
+              ((isRecording && isRecording !== "right") || isLoading) && styles.buttonDisabled,
               pressed && styles.buttonPressed
             ]}
             onPress={() => handleRecord("right")}
             disabled={(isRecording && isRecording !== "right") || isLoading}
           >
-            <ThemedText style={[styles.buttonText, { color: useThemeColor({}, 'background') }]}>
+            <ThemedText style={[styles.buttonText, { color: backgroundColor }]}>
               {isRecording === "right" ? "Stop" : "Record"}
             </ThemedText>
           </Pressable>
         </View>
       </View>
-      {isLoading && <ActivityIndicator size="large" color={useThemeColor({}, 'primary')} />}
+
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={primaryColor} />
+          <ThemedText style={styles.loadingText}>Processing translation...</ThemedText>
+        </View>
+      )}
     </ThemedView>
   );
 }
@@ -349,6 +358,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20
   },
+  separator: {
+    paddingHorizontal: 20,
+    alignItems: "center"
+  },
+  separatorText: {
+    fontSize: 24,
+    fontWeight: "bold"
+  },
+  languageLabel: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 10
+  },
   picker: {
     width: 200,
     height: 150
@@ -366,9 +388,22 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.5,
   },
+  buttonRecording: {
+    backgroundColor: "#ff4444",
+    borderColor: "#cc0000"
+  },
   buttonText: {
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center"
+  },
+  loadingContainer: {
+    position: 'absolute',
+    bottom: 100,
+    alignItems: "center"
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16
   }
 });

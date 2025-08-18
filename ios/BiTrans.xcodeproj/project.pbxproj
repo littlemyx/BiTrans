@@ -8,27 +8,25 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		1C9432E1BF67F39A1C18FFB7 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8C42760F59C5839897F96706 /* PrivacyInfo.xcprivacy */; };
+		2741F0B21C20F9BA8FD774A3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 7CEACACE4C114D761D79E4C7 /* PrivacyInfo.xcprivacy */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		4F4A3E192E34343400B74DE0 /* tone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4F4A3E182E34343400B74DE0 /* tone.mp3 */; };
-		93D07F429B28798A4F8AF4DB /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5628EAA2EA8942F4DD71743 /* ExpoModulesProvider.swift */; };
+		53CA90FA4D8A88DAF5595BE4 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047FEB3A052141E80805E700 /* ExpoModulesProvider.swift */; };
+		9C029ED35FC556442C13802D /* libPods-BiTrans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF48157688B6A8E1F85123ED /* libPods-BiTrans.a */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
-		E8893EE0BF722F929F775EA9 /* libPods-BiTrans.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 054C58CAB205BA302D8AD531 /* libPods-BiTrans.a */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		054C58CAB205BA302D8AD531 /* libPods-BiTrans.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiTrans.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		047FEB3A052141E80805E700 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-BiTrans/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* BiTrans.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BiTrans.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = BiTrans/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = BiTrans/Info.plist; sourceTree = "<group>"; };
-		1F08713719ABCC480CEFE703 /* Pods-BiTrans.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiTrans.debug.xcconfig"; path = "Target Support Files/Pods-BiTrans/Pods-BiTrans.debug.xcconfig"; sourceTree = "<group>"; };
-		4F4A3E182E34343400B74DE0 /* tone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = tone.mp3; sourceTree = "<group>"; };
-		8C42760F59C5839897F96706 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = BiTrans/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		74003514966D1837BBB7CF6E /* Pods-BiTrans.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiTrans.release.xcconfig"; path = "Target Support Files/Pods-BiTrans/Pods-BiTrans.release.xcconfig"; sourceTree = "<group>"; };
+		7CEACACE4C114D761D79E4C7 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = BiTrans/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = BiTrans/SplashScreen.storyboard; sourceTree = "<group>"; };
-		B5628EAA2EA8942F4DD71743 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-BiTrans/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		B5EC4D791684B10E2BC8C76E /* Pods-BiTrans.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiTrans.debug.xcconfig"; path = "Target Support Files/Pods-BiTrans/Pods-BiTrans.debug.xcconfig"; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		E71EE4E416399CC31644110E /* Pods-BiTrans.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BiTrans.release.xcconfig"; path = "Target Support Files/Pods-BiTrans/Pods-BiTrans.release.xcconfig"; sourceTree = "<group>"; };
+		DF48157688B6A8E1F85123ED /* libPods-BiTrans.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-BiTrans.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = BiTrans/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* BiTrans-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "BiTrans-Bridging-Header.h"; path = "BiTrans/BiTrans-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -39,33 +37,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8893EE0BF722F929F775EA9 /* libPods-BiTrans.a in Frameworks */,
+				9C029ED35FC556442C13802D /* libPods-BiTrans.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		023F30C518E204A65543BFD1 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				1F08713719ABCC480CEFE703 /* Pods-BiTrans.debug.xcconfig */,
-				E71EE4E416399CC31644110E /* Pods-BiTrans.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		13B07FAE1A68108700A75B9A /* BiTrans */ = {
 			isa = PBXGroup;
 			children = (
-				4F4A3E182E34343400B74DE0 /* tone.mp3 */,
 				F11748412D0307B40044C1D9 /* AppDelegate.swift */,
 				F11748442D0722820044C1D9 /* BiTrans-Bridging-Header.h */,
 				BB2F792B24A3F905000567C9 /* Supporting */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				8C42760F59C5839897F96706 /* PrivacyInfo.xcprivacy */,
+				7CEACACE4C114D761D79E4C7 /* PrivacyInfo.xcprivacy */,
 			);
 			name = BiTrans;
 			sourceTree = "<group>";
@@ -74,23 +62,15 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				054C58CAB205BA302D8AD531 /* libPods-BiTrans.a */,
+				DF48157688B6A8E1F85123ED /* libPods-BiTrans.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		534FD71EFA10A841D3706692 /* BiTrans */ = {
+		828A2BEA865EC53BEE77282F /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				B5628EAA2EA8942F4DD71743 /* ExpoModulesProvider.swift */,
-			);
-			name = BiTrans;
-			sourceTree = "<group>";
-		};
-		61AF95A49F06C2D39D520727 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				534FD71EFA10A841D3706692 /* BiTrans */,
+				DC55A26CC2C363E21FD9CB81 /* BiTrans */,
 			);
 			name = ExpoModulesProviders;
 			sourceTree = "<group>";
@@ -109,8 +89,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				023F30C518E204A65543BFD1 /* Pods */,
-				61AF95A49F06C2D39D520727 /* ExpoModulesProviders */,
+				E6A8AF5F38E9E197BDDC9A76 /* Pods */,
+				828A2BEA865EC53BEE77282F /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -134,6 +114,23 @@
 			path = BiTrans/Supporting;
 			sourceTree = "<group>";
 		};
+		DC55A26CC2C363E21FD9CB81 /* BiTrans */ = {
+			isa = PBXGroup;
+			children = (
+				047FEB3A052141E80805E700 /* ExpoModulesProvider.swift */,
+			);
+			name = BiTrans;
+			sourceTree = "<group>";
+		};
+		E6A8AF5F38E9E197BDDC9A76 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B5EC4D791684B10E2BC8C76E /* Pods-BiTrans.debug.xcconfig */,
+				74003514966D1837BBB7CF6E /* Pods-BiTrans.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -142,13 +139,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "BiTrans" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				96FE8F0E596B736F54DE6857 /* [Expo] Configure project */,
+				DD400EC0E0D0ED646927DA60 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				B5498BBC372D9EE74DEF9A15 /* [CP] Embed Pods Frameworks */,
+				29FFE301C1D1E14317879F3A /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,10 +193,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
-				4F4A3E192E34343400B74DE0 /* tone.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				1C9432E1BF67F39A1C18FFB7 /* PrivacyInfo.xcprivacy in Resources */,
+				2741F0B21C20F9BA8FD774A3 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +239,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		29FFE301C1D1E14317879F3A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BiTrans/Pods-BiTrans-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BiTrans/Pods-BiTrans-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -281,7 +295,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BiTrans/Pods-BiTrans-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		96FE8F0E596B736F54DE6857 /* [Expo] Configure project */ = {
+		DD400EC0E0D0ED646927DA60 /* [Expo] Configure project */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -300,24 +314,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-BiTrans/expo-configure-project.sh\"\n";
 		};
-		B5498BBC372D9EE74DEF9A15 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-BiTrans/Pods-BiTrans-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BiTrans/Pods-BiTrans-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -326,7 +322,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				93D07F429B28798A4F8AF4DB /* ExpoModulesProvider.swift in Sources */,
+				53CA90FA4D8A88DAF5595BE4 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,13 +331,13 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1F08713719ABCC480CEFE703 /* Pods-BiTrans.debug.xcconfig */;
+			baseConfigurationReference = B5EC4D791684B10E2BC8C76E /* Pods-BiTrans.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BiTrans/BiTrans.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LD8A33C8HB;
+				DEVELOPMENT_TEAM = 55CM3593S6;
 				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
@@ -372,13 +368,13 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E71EE4E416399CC31644110E /* Pods-BiTrans.release.xcconfig */;
+			baseConfigurationReference = 74003514966D1837BBB7CF6E /* Pods-BiTrans.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = BiTrans/BiTrans.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LD8A33C8HB;
+				DEVELOPMENT_TEAM = 55CM3593S6;
 				INFOPLIST_FILE = BiTrans/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -456,10 +452,7 @@
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -514,10 +507,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = "$(SDKROOT)/usr/lib/swift\"$(inherited)\"";
 				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
