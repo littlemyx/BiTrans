@@ -1,4 +1,10 @@
 import { Picker } from "@react-native-picker/picker";
+import Voice, {
+  SpeechEndEvent,
+  SpeechErrorEvent,
+  SpeechResultsEvent,
+  SpeechStartEvent,
+} from "@react-native-voice/voice";
 import { Audio } from "expo-av";
 import * as FileSystem from "expo-file-system";
 import React, { useEffect, useState } from "react";
@@ -8,7 +14,7 @@ import {
   NativeModules,
   Pressable,
   StyleSheet,
-  View
+  View,
 } from "react-native";
 
 import { ThemedText } from "@/components/ThemedText";
@@ -25,24 +31,36 @@ export default function HomeScreen() {
   const [leftLanguage, setLeftLanguage] = useState("en");
   const [rightLanguage, setRightLanguage] = useState("ru");
   const [isRecording, setIsRecording] = useState<"left" | "right" | null>(null);
-  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+
+  const [partialText, setPartialText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [permissionResponse, requestPermission] = Audio.usePermissions();
+
+  // язык -> iOS локаль для SFSpeechRecognizer
+  const iosLocaleMap: Record<string, string> = {
+    en: "en-US",
+    ru: "ru-RU",
+    de: "de-DE",
+  };
 
   useEffect(() => {
-    requestPermission();
-    
-    return () => {
-      cleanupRecording();
+    Voice.onSpeechStart = (_e: SpeechStartEvent) => {};
+    Voice.onSpeechResults = (e: SpeechResultsEvent) => {
+      const text = e.value?.[0] ?? "";
+      setPartialText(text);
     };
-  }, [requestPermission]);
+    Voice.onSpeechEnd = (_e: SpeechEndEvent) => {};
+    Voice.onSpeechError = (_e: SpeechErrorEvent) => {
+      setIsRecording(null);
+      Alert.alert("ASR Error", "Speech recognition failed");
+    };
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
 
   const cleanupRecording = async () => {
     try {
-      if (recording) {
-        await recording.stopAndUnloadAsync();
-        setRecording(null);
-      }
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: false,
         playsInSilentModeIOS: false
@@ -52,105 +70,52 @@ export default function HomeScreen() {
     }
   };
 
-  async function startRecording() {
+  // ВАЖНО: теперь принимаем сторону, чтобы явно выбрать язык из нужного селектора
+  async function startRecording(side: "left" | "right") {
     try {
       await cleanupRecording();
-      
-      if (permissionResponse && permissionResponse.status !== "granted") {
-        await requestPermission();
-      }
-      
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true
-      });
 
-      const { recording: newRecording } = await Audio.Recording.createAsync({
-        isMeteringEnabled: true,
-        android: {
-          extension: ".m4a",
-          outputFormat: Audio.AndroidOutputFormat.MPEG_4,
-          audioEncoder: Audio.AndroidAudioEncoder.AAC,
-          sampleRate: 16000,
-          numberOfChannels: 1,
-          bitRate: 64000
-        },
-        ios: {
-          extension: ".wav",
-          audioQuality: Audio.IOSAudioQuality.MEDIUM,
-          sampleRate: 16000,
-          numberOfChannels: 1,
-          bitRate: 64000,
-          linearPCMBitDepth: 16,
-          linearPCMIsBigEndian: false,
-          linearPCMIsFloat: false
-        },
-        web: {}
-      });
-      setRecording(newRecording);
+      const fromLanguage = side === "left" ? leftLanguage : rightLanguage;
+      const locale = iosLocaleMap[fromLanguage] ?? "en-US";
+
+      setPartialText("");
+      await Voice.destroy().catch(() => {});
+      await Voice.start(locale);
     } catch (err) {
-      console.error("Failed to start recording", err);
+      console.error("Failed to start ASR", err);
       setIsRecording(null);
-      Alert.alert("Recording Error", "Failed to start recording");
+      Alert.alert("ASR Error", "Failed to start speech recognition");
     }
   }
 
   async function stopRecording() {
-    if (!recording) return;
-    
     try {
-      await recording.stopAndUnloadAsync();
-      const uri = recording.getURI();
-      setRecording(null);
-      
+      await Voice.stop();
+      const text = partialText.trim();
+
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: false
       });
-      
-      if (uri) {
-        await translateAudio(uri);
+
+      if (text) {
+        await translateText(text);
+      } else {
+        setIsRecording(null);
       }
     } catch (error) {
-      console.error("Error stopping recording:", error);
-      setRecording(null);
+      console.error("Error stopping ASR:", error);
       setIsRecording(null);
-      Alert.alert("Error", "Failed to stop recording");
+      Alert.alert("Error", "Failed to stop speech recognition");
     }
   }
 
-  async function translateAudio(uri: string) {
+  async function translateText(inputText: string) {
     setIsLoading(true);
     const apiKey = "ADD OPENAI-TOKEN-HERE";
     const toLanguage = isRecording === "left" ? rightLanguage : leftLanguage;
     const fromLanguage = isRecording === "left" ? leftLanguage : rightLanguage;
 
     try {
-      const transcriptionFormData = new FormData();
-      transcriptionFormData.append("file", {
-        uri: uri,
-        name: "recording.wav",
-        type: "audio/wav"
-      } as any);
-      transcriptionFormData.append("model", "whisper-1");
-      transcriptionFormData.append("language", fromLanguage);
-
-      const transcriptionResponse = await fetch(
-        "https://api.openai.com/v1/audio/transcriptions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${apiKey}`
-          },
-          body: transcriptionFormData
-        }
-      );
-
-      const transcriptionJson = await transcriptionResponse.json();
-      if (transcriptionJson.error) {
-        throw new Error(`Transcription failed: ${transcriptionJson.error.message}`);
-      }
-      const transcribedText = transcriptionJson.text;
-
       const translationResponse = await fetch(
         "https://api.openai.com/v1/chat/completions",
         {
@@ -164,9 +129,9 @@ export default function HomeScreen() {
             messages: [
               {
                 role: "system",
-                content: `Translate ${fromLanguage} to ${toLanguage}:`
+                content: `Translate ${fromLanguage} to ${toLanguage} and return result:`
               },
-              { role: "user", content: transcribedText }
+              { role: "user", content: inputText }
             ]
           })
         }
@@ -224,6 +189,7 @@ export default function HomeScreen() {
         } finally {
           setIsLoading(false);
           setIsRecording(null);
+          setPartialText("");
         }
       };
 
@@ -231,6 +197,7 @@ export default function HomeScreen() {
       Alert.alert("Error", error instanceof Error ? error.message : "Translation failed");
       setIsLoading(false);
       setIsRecording(null);
+      setPartialText("");
     }
   }
 
@@ -242,7 +209,7 @@ export default function HomeScreen() {
         await cleanupRecording();
       }
       setIsRecording(side);
-      await startRecording();
+      await startRecording(side); // <- передаём сторону, чтобы выбрать нужный язык
     }
   };
 
